@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page {
+            size: a4 portrait;
+            @frame header_frame {           /* Static Frame */
+                -pdf-frame-content: header_content;
+                left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+            }
+            @frame content_frame {          /* Content Frame */
+                left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+            }
+            @frame footer_frame {           /* Static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+            }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 10pt;
+            color: #333;
+        }
+        #header_content {
+            border-bottom: 1px solid #2563EB;
+            color: #2563EB;
+            font-weight: bold;
+            font-size: 14pt;
+        }
+        #footer_content {
+            border-top: 1px solid #ccc;
+            font-size: 8pt;
+            text-align: center;
+            color: #666;
+        }
+        h1 { color: #1E3A8A; font-size: 18pt; margin-bottom: 10pt; }
+        h2 { color: #2563EB; font-size: 14pt; margin-top: 15pt; border-bottom: 0.5pt solid #eee; padding-bottom: 3pt; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10pt; }
+        th { background-color: #f1f5f9; color: #1e3a8a; font-weight: bold; text-align: left; padding: 5pt; border: 0.5pt solid #ccc; font-size: 9pt; }
+        td { padding: 5pt; border: 0.5pt solid #ccc; font-size: 9pt; }
+        .badge { padding: 2pt 5pt; border-radius: 3pt; color: white; font-weight: bold; font-size: 8pt; display: inline; }
+        .badge-A { background-color: #10B981; }
+        .badge-B { background-color: #2563EB; }
+        .badge-C { background-color: #F59E0B; }
+        .badge-D { background-color: #EF4444; }
+        .summary-box { background-color: #f8fafc; border: 0.5pt solid #e2e8f0; padding: 10pt; border-radius: 5pt; margin-bottom: 15pt; }
+    </style>
+</head>
+<body>
+    <div id="header_content">EduPredict — Academic Performance Platform</div>
+    
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div id="footer_content">
+        Page <pdf:pagenumber> of <pdf:pagecount> — Generated on {{ date|date:"M d, Y" }}
+    </div>
+</body>
+</html>

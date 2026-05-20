@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EduPredict | Reports Center{% endblock %}
+{% block page_title %}Reports Center{% endblock %}
+{% block page_subtitle %}Generate and Export Academic Documentation{% endblock %}
+
+{% block content %}
+
+<div class="row g-4">
+    <!-- Official Certificates -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body text-center p-4">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px; font-size: 1.5rem;">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h5 class="fw-700">Official Certificates</h5>
+                <p class="text-muted small mb-4">Generate individual academic performance certificates for students with AI-driven insights.</p>
+                <div class="d-grid">
+                    <a href="{% url 'export_my_report' %}" class="btn btn-primary-ocp btn-sm py-2">
+                        <i class="fas fa-download me-2"></i> Download My Certificate (PDF)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Reports -->
+    {% if can_see_prof or can_see_admin %}
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body text-center p-4">
+                <div class="bg-success bg-opacity-10 text-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px; font-size: 1.5rem;">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h5 class="fw-700">Class Reports</h5>
+                <p class="text-muted small mb-4">Export detailed class performance summaries including grade distributions and at-risk students.</p>
+                <div class="d-grid">
+                    <a href="{% url 'export_my_professor_report' %}" class="btn btn-success btn-sm py-2 text-white">
+                        <i class="fas fa-file-pdf me-2"></i> Export Class Report (PDF)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Platform Summary -->
+    {% if can_see_admin %}
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body text-center p-4">
+                <div class="bg-info bg-opacity-10 text-info rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px; font-size: 1.5rem;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h5 class="fw-700">Platform Summary</h5>
+                <p class="text-muted small mb-4">Comprehensive overview of platform-wide academic metrics and professor performance.</p>
+                <div class="d-grid">
+                    <a href="{% url 'export_admin_report' %}" class="btn btn-info btn-sm py-2 text-white">
+                        <i class="fas fa-file-pdf me-2"></i> System Export (PDF)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Raw Data Exports -->
+    <div class="col-12 mt-4">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-header bg-white border-0 py-3">
+                <h6 class="fw-700 mb-0"><i class="fas fa-database text-muted me-2"></i>Raw Data Exports</h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Dataset Name</th>
+                                <th>Description</th>
+                                <th>Last Updated</th>
+                                <th>Format</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="small fw-700">Student_Predictions_Main</td>
+                                <td class="small text-muted">Complete list of students with scores and AI predictions.</td>
+                                <td class="small">Just now</td>
+                                <td><span class="badge bg-light text-dark border">CSV</span> <span class="badge bg-light text-dark border">XLSX</span></td>
+                                <td>
+                                    <button class="btn btn-light btn-sm"><i class="fas fa-download text-primary"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="small fw-700">Professor_Performance_Metrics</td>
+                                <td class="small text-muted">Aggregated performance data by department and faculty member.</td>
+                                <td class="small">1 hour ago</td>
+                                <td><span class="badge bg-light text-dark border">CSV</span></td>
+                                <td>
+                                    <button class="btn btn-light btn-sm"><i class="fas fa-download text-primary"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

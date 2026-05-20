@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EduPredict | Manage Student{% endblock %}
+{% block page_title %}{% if student %}Edit Student{% else %}Add New Student{% endif %}{% endblock %}
+{% block page_subtitle %}Fill in the details to generate AI-powered academic predictions{% endblock %}
+
+{% block content %}
+<div class="animate-fade-in py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card-premium border-0 shadow-lg">
+                <div class="p-4 border-bottom bg-light bg-opacity-10 d-flex align-items-center gap-3">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-800" style="width: 50px; height: 50px;">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-800 mb-0">Student Academic Record</h5>
+                        <p class="text-muted small mb-0">Ensure all metrics are accurate for optimal ML results</p>
+                    </div>
+                </div>
+                
+                <form method="post" class="p-4">
+                    {% csrf_token %}
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm border-0 mb-4 px-4 py-3">
+                                <i class="fas fa-info-circle me-2"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger shadow-sm rounded-4 border-0 mb-4 px-4 py-3">
+                        <strong>Please fix the following errors:</strong>
+                        <ul class="mb-0 mt-2">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <div class="row g-4">
+                        <!-- Authentication Data -->
+                        <div class="col-12">
+                            <div class="nav-section mt-0 ms-0 text-primary">ACCOUNT IDENTITY</div>
+                            <hr class="mt-1 mb-4 opacity-10">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                {{ form.username }}
+                                {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Email Address</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                {{ form.password }}
+                                {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors }}</div>{% endif %}
+                                <small class="text-muted">Required only for new students</small>
+                            </div>
+                        </div>
+
+                        <!-- Personal Data -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+
+                        <!-- Academic Metrics -->
+                        <div class="col-12 mt-5">
+                            <div class="nav-section ms-0 text-primary">ACADEMIC PERFORMANCE METRICS</div>
+                            <hr class="mt-1 mb-4 opacity-10">
+                        </div>
+
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Midterm Score (0-20)</label>
+                                {{ form.midterm_score }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Homework (%)</label>
+                                {{ form.assignment_completion }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Attendance (%)</label>
+                                {{ form.attendance_rate }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Study Hours (Wk)</label>
+                                {{ form.study_hours }}
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Learning Style</label>
+                                {{ form.learning_style }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Motivation</label>
+                                {{ form.motivation }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Parental Support</label>
+                                {{ form.parental_support }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Previous Grade</label>
+                                {{ form.previous_grade }}
+                            </div>
+                        </div>
+
+                        {% if form.professor_choice %}
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-primary fw-800">Assign Professor (Admin Only)</label>
+                                {{ form.professor_choice }}
+                                <small class="text-muted">Select the faculty supervisor for this student.</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-5 pt-4 border-top d-flex gap-3 justify-content-end">
+                        <a href="{% if user.role == 'admin' %}{% url 'admin_student_list' %}{% else %}{% url 'professor_dashboard' %}{% endif %}" class="btn btn-secondary-custom">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-hero-main">
+                            <i class="fas fa-save me-2"></i> {% if student %}Save Changes{% else %}Create Student & Predict{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling injected widgets from Django forms */
+    select.form-control, input.form-control {
+        border-radius: 12px;
+        padding: 12px 16px;
+        border: 1px solid #E2E8F0;
+        background-color: #F8FAFC;
+    }
+    select.form-control:focus, input.form-control:focus {
+        border-color: #1D4ED8;
+        box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.1);
+        background-color: white;
+    }
+</style>
+{% endblock %}

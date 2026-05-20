@@ -1,0 +1,54 @@
+{% extends "reports/base_pdf.html" %}
+
+{% block content %}
+<h1>Class Performance Report</h1>
+<div class="summary-box">
+    <p><strong>Professor:</strong> {{ professor.user.get_full_name|default:professor.user.username }}</p>
+    <p><strong>Subject:</strong> {{ professor.subject }}</p>
+    <p><strong>Assigned Students:</strong> {{ students_count }}</p>
+</div>
+
+<h2>Class Summary</h2>
+<table>
+    <tr>
+        <th>Grade A</th>
+        <th>Grade B</th>
+        <th>Grade C</th>
+        <th>Grade D (At Risk)</th>
+    </tr>
+    <tr>
+        <td style="text-align:center;">{{ grade_a_count }}</td>
+        <td style="text-align:center;">{{ grade_b_count }}</td>
+        <td style="text-align:center;">{{ grade_c_count }}</td>
+        <td style="text-align:center; color:red; font-weight:bold;">{{ grade_d_count }}</td>
+    </tr>
+</table>
+
+<h2>Student Performance Details</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Midterm</th>
+            <th>Assignment</th>
+            <th>Attendance</th>
+            <th>Prediction</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+        <tr>
+            <td>{{ student.user.get_full_name|default:student.user.username }}</td>
+            <td>{{ student.midterm_score }}</td>
+            <td>{{ student.assignment_completion }}%</td>
+            <td>{{ student.attendance_rate }}%</td>
+            <td><span class="badge badge-{{ student.prediction|default:'NA' }}">{{ student.prediction|default:'?' }}</span></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p style="margin-top: 20pt; font-size: 9pt; color: #666;">
+    * Students with Grade D are considered at risk and should be prioritized for academic counseling.
+</p>
+{% endblock %}

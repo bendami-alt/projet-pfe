@@ -1,0 +1,46 @@
+<aside class="sidebar shadow-lg">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <span class="sidebar-brand-text">EduPredict</span>
+    </div>
+
+    <nav class="sidebar-nav">
+        {% if user.role == 'admin' %}
+            <div class="nav-section">Administration</div>
+            <a href="{% url 'admin_dashboard' %}" class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="{% url 'admin_student_list' %}" class="{% if request.resolver_match.url_name == 'admin_student_list' or request.resolver_match.url_name == 'add_student' or request.resolver_match.url_name == 'admin_edit_student' %}active{% endif %}">
+                <i class="fas fa-user-graduate"></i> Students
+            </a>
+            <a href="{% url 'professor_list' %}" class="{% if request.resolver_match.url_name == 'professor_list' or request.resolver_match.url_name == 'add_professor' or request.resolver_match.url_name == 'edit_professor' or request.resolver_match.url_name == 'professor_detail' %}active{% endif %}">
+                <i class="fas fa-chalkboard-teacher"></i> Professors
+            </a>
+        {% elif user.role == 'professor' %}
+            <div class="nav-section">Management</div>
+            <a href="{% url 'professor_dashboard' %}" class="{% if request.resolver_match.url_name == 'professor_dashboard' %}active{% endif %}">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </a>
+            <a href="{% url 'professor_student_list' %}" class="{% if request.resolver_match.url_name == 'professor_student_list' %}active{% endif %}">
+                <i class="fas fa-users"></i> My Students
+            </a>
+        {% elif user.role == 'student' %}
+            <div class="nav-section">Learning</div>
+            <a href="{% url 'student_dashboard' %}" class="{% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">
+                <i class="fas fa-chart-pie"></i> My Progress
+            </a>
+        {% endif %}
+
+        <div class="mt-auto pt-4 border-top border-white border-opacity-10">
+            <div class="nav-section">Account</div>
+            <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                <i class="fas fa-user-circle"></i> My Profile
+            </a>
+            <a href="{% url 'logout' %}" class="text-danger opacity-75 hover-opacity-100">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </nav>
+</aside>

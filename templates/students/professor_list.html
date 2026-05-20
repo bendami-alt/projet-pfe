@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EduPredict | Professors Management{% endblock %}
+{% block page_title %}Faculty Directory{% endblock %}
+{% block page_subtitle %}Manage professors and their academic assignments{% endblock %}
+
+{% block content %}
+<div class="animate-fade-in">
+    <!-- Action Bar -->
+    <div class="card-premium p-4 mb-4 border-0 shadow-sm">
+        <div class="row align-items-center g-3">
+            <div class="col-md-4">
+                <div class="position-relative">
+                    <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input type="text" id="profSearch" class="form-control ps-5" placeholder="Search by name or email...">
+                </div>
+            </div>
+            <div class="col-md-8 text-md-end">
+                <div class="d-flex flex-wrap justify-content-md-end gap-3">
+                    <a href="{% url 'add_professor' %}" class="btn btn-hero-main">
+                        <i class="fas fa-plus-circle me-2"></i> Add New Professor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professors Table -->
+    <div class="table-container shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Professor Info</th>
+                        <th>Department</th>
+                        <th>Managed Students</th>
+                        <th>Join Date</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="profTableBody">
+                    {% for prof in professors %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-purple bg-opacity-10 text-purple rounded-circle d-flex align-items-center justify-content-center fw-800 shadow-sm" style="width: 44px; height: 44px;">
+                                    {{ prof.user.username|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-800 text-dark">{{ prof.user.get_full_name|default:prof.user.username }}</div>
+                                    <div class="text-muted smaller fw-600">{{ prof.user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-purple bg-opacity-10 text-purple rounded-pill px-3 py-1 fw-700 small">
+                                {{ prof.department|default:"Academic Faculty" }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-light rounded-pill px-3 py-1 fw-800 small text-dark border">
+                                    {{ prof.students.count }} Students
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="small fw-600 text-muted">{{ prof.user.date_joined|date:"M d, Y" }}</span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{% url 'professor_detail' prof.pk %}" class="btn btn-light btn-sm rounded-circle p-2" title="View Profile">
+                                    <i class="fas fa-eye text-primary"></i>
+                                </a>
+                                <a href="{% url 'edit_professor' prof.pk %}" class="btn btn-light btn-sm rounded-circle p-2" title="Edit">
+                                    <i class="fas fa-edit text-info"></i>
+                                </a>
+                                <a href="{% url 'delete_professor' prof.pk %}" class="btn btn-light btn-sm rounded-circle p-2" title="Delete" onclick="return confirm('Are you sure you want to delete this professor and their account?')">
+                                    <i class="fas fa-trash text-danger"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="py-4">
+                                <i class="fas fa-chalkboard-teacher fa-3x text-muted mb-3 opacity-25"></i>
+                                <p class="text-muted fw-700">No professors found in the database.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('profSearch').addEventListener('keyup', function() {
+        let value = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#profTableBody tr');
+        rows.forEach(row => {
+            let text = row.innerText.toLowerCase();
+            row.style.display = text.includes(value) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

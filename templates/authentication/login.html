@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPredict | Secure Login</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --primary: #1D4ED8;
+            --primary-gradient: linear-gradient(135deg, #1D4ED8 0%, #0EA5E9 100%);
+            --dark-navy: #0F172A;
+            --bg-light: #F8FAFC;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: white;
+            padding: 3.5rem;
+            border-radius: 32px;
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08);
+            width: 100%;
+            max-width: 480px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 6px;
+            background: var(--primary-gradient);
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 3rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 10px 25px rgba(29, 78, 216, 0.25);
+        }
+
+        .logo-text {
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--dark-navy);
+            letter-spacing: -0.04em;
+        }
+
+        .form-label {
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748B;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            border-radius: 14px;
+            padding: 14px 20px;
+            border: 1px solid #E2E8F0;
+            background-color: #F8FAFC;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            background-color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.1);
+            outline: none;
+        }
+
+        .btn-login {
+            background: var(--primary-gradient);
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 10px 20px rgba(29, 78, 216, 0.2);
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(29, 78, 216, 0.3);
+        }
+
+        .back-link {
+            color: #94A3B8;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card animate__animated animate__fadeInUp">
+        <a href="{% url 'landing' %}" class="logo-container">
+            <div class="logo-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="logo-text">EduPredict</div>
+        </a>
+
+        <div class="text-center mb-5">
+            <h4 class="fw-900 text-dark mb-2">Welcome Back</h4>
+            <p class="text-muted small fw-600">Enter your credentials to access your academic dashboard.</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} small rounded-4 border-0 shadow-sm mb-4 px-4 py-3">
+                        <i class="fas fa-info-circle me-2"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="mb-4">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="e.g. john_doe" required>
+            </div>
+
+            <div class="mb-5">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-login">
+                Sign In to Platform <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+            
+            <div class="text-center mt-5">
+                <a href="{% url 'landing' %}" class="back-link">
+                    <i class="fas fa-chevron-left small"></i> Back to Home
+                </a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

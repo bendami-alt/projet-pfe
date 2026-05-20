@@ -1,0 +1,92 @@
+{% extends "reports/base_pdf.html" %}
+
+{% block content %}
+<h1>Platform Academic Summary</h1>
+<div class="summary-box">
+    <p>This report provides a comprehensive overview of the academic performance across the EduPredict platform. It includes student statistics, prediction distributions, and faculty information.</p>
+</div>
+
+<h2>Global Key Metrics</h2>
+<table>
+    <tr>
+        <th>Metric</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td>Total Students</td>
+        <td>{{ students_count }}</td>
+    </tr>
+    <tr>
+        <td>Total Professors</td>
+        <td>{{ professors_count }}</td>
+    </tr>
+    <tr>
+        <td>Grade A Students</td>
+        <td>{{ prediction_dist.A|default:0 }}</td>
+    </tr>
+    <tr>
+        <td>Platform Success Rate</td>
+        <td>High</td>
+    </tr>
+</table>
+
+<h2>Prediction Distribution</h2>
+<p>Breakdown of AI predictions for all enrolled students:</p>
+<table>
+    <tr>
+        <th>Grade</th>
+        <th>Count</th>
+        <th>Percentage</th>
+    </tr>
+    <tr>
+        <td>Grade A</td>
+        <td>{{ prediction_dist.A|default:0 }}</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Grade B</td>
+        <td>{{ prediction_dist.B|default:0 }}</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Grade C</td>
+        <td>{{ prediction_dist.C|default:0 }}</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Grade D</td>
+        <td>{{ prediction_dist.D|default:0 }}</td>
+        <td>-</td>
+    </tr>
+</table>
+
+<h2>Complete Student List</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Professor</th>
+            <th>Midterm</th>
+            <th>Attendance</th>
+            <th>Prediction</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+        <tr>
+            <td>{{ student.user.get_full_name|default:student.user.username }}</td>
+            <td>
+                {% if student.professor and student.professor.user %}
+                    {{ student.professor.user.get_full_name|default:student.professor.user.username }}
+                {% else %}
+                    Unassigned
+                {% endif %}
+            </td>
+            <td>{{ student.midterm_score }}</td>
+            <td>{{ student.attendance_rate }}%</td>
+            <td><span class="badge badge-{{ student.prediction|default:'NA' }}">{{ student.prediction|default:'?' }}</span></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

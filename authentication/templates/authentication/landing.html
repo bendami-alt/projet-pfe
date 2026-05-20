@@ -1,0 +1,431 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPredict | Next-Gen Academic Intelligence</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --primary: #1D4ED8;
+            --primary-gradient: linear-gradient(135deg, #1D4ED8 0%, #0EA5E9 100%);
+            --secondary: #0EA5E9;
+            --dark-navy: #0F172A;
+            --bg-light: #F8FAFC;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --radius-32: 32px;
+            --radius-lg: 20px;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .navbar.scrolled {
+            padding: 1rem 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-nav-login {
+            background: var(--primary-gradient);
+            color: white !important;
+            padding: 12px 32px;
+            border-radius: 14px;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(29, 78, 216, 0.2);
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-nav-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(29, 78, 216, 0.3);
+            color: white !important;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            padding: 12rem 0 8rem;
+            position: relative;
+            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 40%);
+        }
+
+        .hero-badge {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-weight: 900;
+            font-size: 4.8rem;
+            line-height: 1.05;
+            letter-spacing: -0.05em;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--dark-navy) 40%, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 4rem;
+            max-width: 600px;
+        }
+
+        /* Dashboard Preview Mockup */
+        .dashboard-preview {
+            position: relative;
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateY(-5deg) rotateX(5deg); }
+            50% { transform: translateY(-20px) rotateY(-2deg) rotateX(2deg); }
+        }
+
+        .preview-window {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-32);
+            padding: 2.5rem;
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.12);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-window::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            border: 1px solid #F1F5F9;
+            transition: transform 0.3s ease;
+        }
+
+        .kpi-card:hover { transform: scale(1.05); }
+
+        .kpi-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .kpi-value { font-weight: 800; font-size: 1.5rem; color: var(--dark-navy); }
+
+        .ai-status-alert {
+            background: #F0FDF4;
+            border: 1px solid #DCFCE7;
+            border-radius: 20px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .ai-status-icon {
+            width: 36px; height: 36px;
+            background: #22C55E;
+            color: white;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .mini-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 60px;
+            margin-top: 1.5rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: var(--primary-gradient);
+            border-radius: 4px 4px 0 0;
+            opacity: 0.3;
+            transition: height 1s ease-out, opacity 0.3s;
+        }
+
+        .chart-bar.active { opacity: 1; }
+
+        .btn-hero-main {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 18px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 20px 40px rgba(29, 78, 216, 0.25);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-hero-main:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(29, 78, 216, 0.35);
+            color: white;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 4rem 0;
+            background: white;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 991px) {
+            .hero-title { font-size: 3.2rem; }
+            .dashboard-preview { animation: none; transform: none !important; margin-top: 4rem; }
+            .hero-section { padding-top: 8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <div style="width: 45px; height: 45px; background: var(--primary-gradient); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white;">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <span class="ms-1">EduPredict</span>
+            </a>
+            <div class="ms-auto">
+                <a href="{% url 'login' %}" class="btn btn-nav-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>Access Platform
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="animate__animated animate__fadeInLeft">
+                        <div class="hero-badge">
+                            <span class="badge bg-primary rounded-pill px-2">AI</span>
+                            Powered by Advanced Machine Learning
+                        </div>
+                        <h1 class="hero-title">Predict Academic Success with AI.</h1>
+                        <p class="hero-subtitle">
+                            Transform educational data into actionable insights. Identify at-risk students and optimize teaching strategies in real-time.
+                        </p>
+                        <div class="mt-2">
+                            <a href="{% url 'login' %}" class="btn btn-hero-main">
+                                Start Predicting Now <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="dashboard-preview animate__animated animate__fadeInRight" style="animation-delay: 0.2s;">
+                        <div class="preview-window">
+                            <!-- Analytics Preview Header -->
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="fw-800 text-dark mb-0">Analytics Preview</h5>
+                                <div class="badge bg-success bg-opacity-10 text-success fw-700 px-3 py-2 rounded-pill border border-success border-opacity-10">
+                                    <i class="fas fa-bolt me-1 small"></i> Live 95% Accuracy
+                                </div>
+                            </div>
+
+                            <!-- KPI Grid -->
+                            <div class="kpi-grid">
+                                <div class="kpi-card">
+                                    <div class="kpi-label">Average Score</div>
+                                    <div class="kpi-value counter" data-target="84.5">0</div>
+                                </div>
+                                <div class="kpi-card">
+                                    <div class="kpi-label">Attendance Rate</div>
+                                    <div class="kpi-value"><span class="counter" data-target="92">0</span>%</div>
+                                </div>
+                                <div class="kpi-card">
+                                    <div class="kpi-label">Assignment Completion</div>
+                                    <div class="kpi-value"><span class="counter" data-target="95">0</span>%</div>
+                                </div>
+                                <div class="kpi-card border-primary border-opacity-25" style="background: rgba(29, 78, 216, 0.02);">
+                                    <div class="kpi-label text-primary">Predicted Grade</div>
+                                    <div class="kpi-value text-primary">A</div>
+                                </div>
+                            </div>
+
+                            <!-- AI Status Alert -->
+                            <div class="ai-status-alert">
+                                <div class="ai-status-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-800 small text-success">AI Model Active</div>
+                                    <div class="smaller text-muted" style="font-size: 0.75rem;">Predictions generated successfully in real time.</div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Section -->
+                            <div class="mt-4">
+                                <div class="d-flex justify-content-between mb-2 small fw-800">
+                                    <span class="text-muted">Success Probability</span>
+                                    <span class="text-primary">95%</span>
+                                </div>
+                                <div class="progress rounded-pill shadow-sm" style="height: 10px; background: #F1F5F9;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%; background: var(--primary-gradient); transition: width 1.5s cubic-bezier(0.1, 0.5, 0.2, 1);" id="successProgress"></div>
+                                </div>
+                            </div>
+
+                            <!-- Mini Chart -->
+                            <div class="mini-chart">
+                                <div class="chart-bar" style="height: 40%;"></div>
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 50%;"></div>
+                                <div class="chart-bar active" style="height: 90%;"></div>
+                                <div class="chart-bar" style="height: 70%;"></div>
+                                <div class="chart-bar" style="height: 85%;"></div>
+                                <div class="chart-bar active" style="height: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <div class="navbar-brand justify-content-center mb-3">
+                <div style="width: 32px; height: 32px; background: var(--primary-gradient); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: white;">
+                    <i class="fas fa-brain small"></i>
+                </div>
+                <span class="ms-1 small fw-800">EduPredict</span>
+            </div>
+            <p class="text-muted small mb-0">© 2026 EduPredict Intelligence Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+
+        // Count-up animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 100;
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = (count + inc).toFixed(target % 1 === 0 ? 0 : 1);
+                        setTimeout(updateCount, 15);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        }
+
+        // Trigger animations on load
+        window.addEventListener('load', () => {
+            // Animate progress bar
+            setTimeout(() => {
+                document.getElementById('successProgress').style.width = '95%';
+            }, 500);
+
+            // Animate counters
+            animateCounters();
+            
+            // Animate Chart bars
+            const bars = document.querySelectorAll('.chart-bar');
+            bars.forEach((bar, index) => {
+                const finalHeight = bar.style.height;
+                bar.style.height = '0';
+                setTimeout(() => {
+                    bar.style.height = finalHeight;
+                }, 200 * index);
+            });
+        });
+    </script>
+</body>
+</html>

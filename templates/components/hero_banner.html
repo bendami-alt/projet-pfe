@@ -1,0 +1,16 @@
+<div class="hero-banner">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <h2 class="fw-800 mb-2">{{ title }}</h2>
+            <p class="mb-4 opacity-75">{{ subtitle }}</p>
+            {% if button_text %}
+                <a href="{{ button_url|default:'#' }}" class="btn btn-light fw-700 px-4 py-2 text-primary shadow-sm">
+                    {{ button_text }}
+                </a>
+            {% endif %}
+        </div>
+        <div class="col-lg-4 d-none d-lg-block text-end">
+            <i class="fas fa-{{ icon|default:'chart-line' }}" style="font-size: 5rem; opacity: 0.15;"></i>
+        </div>
+    </div>
+</div>

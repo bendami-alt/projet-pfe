@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EduPredict | My Students{% endblock %}
+{% block page_title %}My Assigned Students{% endblock %}
+{% block page_subtitle %}Review performance and export academic reports for your students{% endblock %}
+
+{% block content %}
+<div class="animate-fade-in">
+    <!-- Action Bar -->
+    <div class="card-premium p-4 mb-4 border-0 shadow-sm">
+        <div class="row align-items-center g-3">
+            <div class="col-md-4">
+                <div class="position-relative">
+                    <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input type="text" id="studentSearch" class="form-control ps-5" placeholder="Search my students...">
+                </div>
+            </div>
+            <div class="col-md-8 text-md-end">
+                <div class="d-flex flex-wrap justify-content-md-end gap-3">
+                    <a href="{% url 'add_student' %}" class="btn btn-hero-main">
+                        <i class="fas fa-plus-circle me-2"></i> Add New Student
+                    </a>
+                    <a href="/students/export/professor/" class="btn btn-secondary-custom">
+                        <i class="fas fa-file-download me-2"></i> Export My Class
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students Table -->
+    <div class="table-container shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Student Info</th>
+                        <th>Academic Level</th>
+                        <th>Attendance</th>
+                        <th>Midterm Score</th>
+                        <th>AI Prediction</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    {% for student in students %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-800 shadow-sm" style="width: 44px; height: 44px;">
+                                    {{ student.user.username|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-800 text-dark">{{ student.user.get_full_name|default:student.user.username }}</div>
+                                    <div class="text-muted smaller fw-600">{{ student.user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark rounded-pill px-3 py-1 fw-700 small">{{ student.level }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2" style="min-width: 100px;">
+                                <div class="progress flex-grow-1" style="height: 6px;">
+                                    <div class="progress-bar {% if student.attendance_rate < 50 %}bg-danger{% elif student.attendance_rate < 75 %}bg-warning{% else %}bg-success{% endif %}" style="width: {{ student.attendance_rate }}%"></div>
+                                </div>
+                                <span class="fw-800 small">{{ student.attendance_rate }}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-800 text-dark">{{ student.midterm_score }}/20</span>
+                        </td>
+                        <td>
+                            <span class="badge-prediction badge-{{ student.prediction|default:'?' }} shadow-sm">
+                                {{ student.prediction|default:'?' }}
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{% url 'admin_student_pdf' student.id %}" class="btn btn-light btn-sm rounded-circle p-2" title="Export PDF">
+                                    <i class="fas fa-file-pdf text-danger"></i>
+                                </a>
+                                <a href="{% url 'admin_edit_student' student.id %}" class="btn btn-light btn-sm rounded-circle p-2" title="Edit">
+                                    <i class="fas fa-edit text-primary"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <div class="py-4">
+                                <i class="fas fa-users-slash fa-3x text-muted mb-3 opacity-25"></i>
+                                <p class="text-muted fw-700">You have no students assigned yet.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('studentSearch').addEventListener('keyup', function() {
+        let value = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#studentTableBody tr');
+        rows.forEach(row => {
+            let text = row.innerText.toLowerCase();
+            row.style.display = text.includes(value) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

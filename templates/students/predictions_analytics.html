@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EduPredict | Predictions Analytics{% endblock %}
+{% block page_title %}Predictions Analytics{% endblock %}
+{% block page_subtitle %}Advanced Machine Learning Insights{% endblock %}
+
+{% block content %}
+
+<!-- KPI Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        {% include 'components/stat_card.html' with icon="brain" value=total_predictions label="Total Predictions" %}
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        {% include 'components/stat_card.html' with icon="star" value=prediction_dist.A label="Grade A Students" %}
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        {% include 'components/stat_card.html' with icon="exclamation-triangle" value=at_risk_count label="At Risk (C/D)" %}
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        {% include 'components/stat_card.html' with icon="chart-line" value=success_rate|add:"%" label="Success Rate" %}
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Prediction Distribution -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h6 class="fw-700 mb-0">Prediction Distribution</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 300px;">
+                <canvas id="predictionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grade Performance Overview -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h6 class="fw-700 mb-0">Grade Performance Overview</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="performanceChart" style="height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Professor Comparison -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <h6 class="fw-700 mb-0">Professor Comparison</h6>
+                <small class="text-muted">Avg. Midterm vs Class Size</small>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Professor</th>
+                                <th>Students</th>
+                                <th>Avg Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prof in prof_stats %}
+                            <tr>
+                                <td class="small fw-600">{{ prof.user__first_name }} {{ prof.user__last_name }}</td>
+                                <td><span class="badge bg-light text-primary">{{ prof.student_count }}</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ prof.avg_midterm }}%"></div>
+                                        </div>
+                                        <small class="fw-700">{{ prof.avg_midterm|floatformat:1 }}</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Watchlists -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h6 class="fw-700 mb-0 text-danger"><i class="fas fa-exclamation-circle me-2"></i>At Risk Students (C/D)</h6>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for student in at_risk_students %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-3 py-2">
+                        <div class="small fw-600">{{ student.user.get_full_name|default:student.user.username }}</div>
+                        <span class="badge-prediction badge-{{ student.prediction }}">{{ student.prediction }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-center text-muted small py-3">No students currently at risk.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h6 class="fw-700 mb-0 text-success"><i class="fas fa-medal me-2"></i>Top Performing Students (A)</h6>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for student in top_students %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-3 py-2">
+                        <div class="small fw-600">{{ student.user.get_full_name|default:student.user.username }}</div>
+                        <span class="badge-prediction badge-A">A</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-center text-muted small py-3">No top performers yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Prediction Distribution Chart
+    const ctxDist = document.getElementById('predictionChart').getContext('2d');
+    new Chart(ctxDist, {
+        type: 'doughnut',
+        data: {
+            labels: ['Grade A', 'Grade B', 'Grade C', 'Grade D'],
+            datasets: [{
+                data: [{{ prediction_dist.A }}, {{ prediction_dist.B }}, {{ prediction_dist.C }}, {{ prediction_dist.D }}],
+                backgroundColor: ['#10B981', '#FACC15', '#F59E0B', '#EF4444'],
+                borderWidth: 0,
+                cutout: '70%'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+            }
+        }
+    });
+
+    // Grade Performance Overview
+    const ctxPerf = document.getElementById('performanceChart').getContext('2d');
+    new Chart(ctxPerf, {
+        type: 'bar',
+        data: {
+            labels: ['Grade A', 'Grade B', 'Grade C', 'Grade D'],
+            datasets: [{
+                label: 'Student Count',
+                data: [{{ prediction_dist.A }}, {{ prediction_dist.B }}, {{ prediction_dist.C }}, {{ prediction_dist.D }}],
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                borderColor: '#2563EB',
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, grid: { display: false } },
+                x: { grid: { display: false } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+</script>
+{% endblock %}

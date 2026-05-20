@@ -1,0 +1,98 @@
+{% extends "reports/base_pdf.html" %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 20pt; border-bottom: 2pt solid #2563EB; padding-bottom: 10pt;">
+    <h1 style="color: #2563EB; margin-bottom: 5pt;">RAPPORT ACADÉMIQUE INDIVIDUEL</h1>
+    <p style="font-size: 10pt; color: #666;">EduPredict Platform - Document Officiel</p>
+</div>
+
+<div style="margin-bottom: 20pt;">
+    <h2 style="font-size: 14pt; border-left: 4pt solid #2563EB; padding-left: 10pt; background: #f8fafc;">Informations Personnelles</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td style="padding: 8pt; width: 30%; font-weight: bold; background: #f1f5f9;">Nom Complet</td>
+            <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">{{ student.user.get_full_name|default:student.user.username }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 8pt; font-weight: bold; background: #f1f5f9;">Nom d'utilisateur</td>
+            <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">@{{ student.user.username }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 8pt; font-weight: bold; background: #f1f5f9;">Email</td>
+            <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">{{ student.user.email|default:"Non renseigné" }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 8pt; font-weight: bold; background: #f1f5f9;">Professeur Assigné</td>
+            <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">
+                {% if student.professor %}
+                    {{ student.professor.user.get_full_name|default:student.professor.user.username }} ({{ student.professor.subject }})
+                {% else %}
+                    Non assigné
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 8pt; font-weight: bold; background: #f1f5f9;">Date d'inscription</td>
+            <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">{{ student.created_at|date:"d F Y" }}</td>
+        </tr>
+    </table>
+</div>
+
+<div style="margin-bottom: 20pt;">
+    <h2 style="font-size: 14pt; border-left: 4pt solid #10B981; padding-left: 10pt; background: #f0fdf4;">Données Académiques & Performance</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #10B981; color: white;">
+                <th style="padding: 8pt; text-align: left;">Indicateur</th>
+                <th style="padding: 8pt; text-align: center;">Valeur</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">Score Mi-Parcours</td>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0; text-align: center;">{{ student.midterm_score }}/100</td>
+            </tr>
+            <tr>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">Complétion des Devoirs</td>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0; text-align: center;">{{ student.assignment_completion }}%</td>
+            </tr>
+            <tr>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">Taux de Présence</td>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0; text-align: center;">{{ student.attendance_rate }}%</td>
+            </tr>
+            <tr>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">Heures d'Étude Hebdomadaires</td>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0; text-align: center;">{{ student.study_hours }}h</td>
+            </tr>
+            <tr>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">Motivation</td>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0; text-align: center;">{{ student.motivation }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">Soutien Parental</td>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0; text-align: center;">{{ student.parental_support }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">Note Précédente</td>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0; text-align: center;">{{ student.previous_grade }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0;">Style d'Apprentissage</td>
+                <td style="padding: 8pt; border-bottom: 1pt solid #e2e8f0; text-align: center;">{{ student.learning_style }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="background: #f8fafc; border: 1pt solid #e2e8f0; padding: 15pt; border-radius: 8pt; text-align: center;">
+    <h3 style="margin-top: 0; color: #1e293b;">PRÉDICTION FINALE (IA)</h3>
+    <div style="font-size: 36pt; font-weight: bold; color: #2563EB;">
+        {{ student.prediction|default:"N/A" }}
+    </div>
+    <p style="margin-bottom: 0; color: #64748b; font-size: 9pt;">Calculé par l'algorithme EduPredict Intelligence</p>
+</div>
+
+<div style="margin-top: 30pt; font-size: 8pt; color: #94a3b8; text-align: center;">
+    Généré le {{ date|date:"d/m/Y H:i" }} | Identifiant Étudiant: #{{ student.id }}
+</div>
+{% endblock %}

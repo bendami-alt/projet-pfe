@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EduPredict | My Analytics Dashboard{% endblock %}
+{% block page_title %}Academic Performance Analytics{% endblock %}
+{% block page_subtitle %}Real-time predictive insights and progress tracking{% endblock %}
+
+{% block content %}
+<div class="animate-fade-in">
+    <!-- Hero Section -->
+    <div class="card border-0 rounded-32 gradient-bg p-4 p-lg-5 mb-5 text-white shadow-lg overflow-hidden position-relative">
+        <div class="position-relative z-index-2">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="fw-900 mb-2">Welcome back, {{ student.user.get_full_name|default:student.user.username }}!</h1>
+                    <p class="text-white text-opacity-75 mb-4 lead">Our AI model has analyzed your latest academic data to provide personalized insights.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="/students/export/student/" class="btn btn-light rounded-20 px-4 py-2 fw-800 text-primary border-0 shadow-sm">
+                            <i class="fas fa-file-download me-2"></i> Download My Report
+                        </a>
+                        <div class="glass-card rounded-20 px-4 py-2 d-flex align-items-center gap-2">
+                            <i class="fas fa-shield-alt text-white"></i>
+                            <span class="small fw-700">Data Verified: Today</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center mt-4 mt-lg-0">
+                    <div class="position-relative d-inline-block">
+                        <div class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center shadow-lg animate-float" style="width: 120px; height: 120px; border: 8px solid rgba(255,255,255,0.2);">
+                            <div class="text-center">
+                                <div class="small fw-800 uppercase" style="font-size: 0.65rem;">Predicted</div>
+                                <div class="display-4 fw-900 line-height-1">{{ student.prediction|default:"?" }}</div>
+                            </div>
+                        </div>
+                        <div class="position-absolute bottom-0 end-0 bg-success text-white rounded-pill px-2 py-1 fw-800 shadow-sm" style="font-size: 0.6rem;">
+                            95% Conf.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card-premium p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2 px-3">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 small fw-700">+12%</span>
+                </div>
+                <div class="text-muted small fw-700 mb-1">MIDTERM SCORE</div>
+                <div class="h3 fw-800 mb-2"><span class="counter" data-target="{{ student.midterm_score|default:0 }}">0</span>/20</div>
+                <div class="progress rounded-pill" style="height: 6px;">
+                    <div class="progress-bar bg-primary" style="width: {% widthratio student.midterm_score 20 100 %}%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card-premium p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="bg-success bg-opacity-10 text-success rounded-3 p-2 px-3">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 small fw-700">Stable</span>
+                </div>
+                <div class="text-muted small fw-700 mb-1">ATTENDANCE RATE</div>
+                <div class="h3 fw-800 mb-2"><span class="counter" data-target="{{ student.attendance_rate|default:0 }}">0</span>%</div>
+                <div class="progress rounded-pill" style="height: 6px;">
+                    <div class="progress-bar bg-success" style="width: {{ student.attendance_rate|default:0 }}%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card-premium p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2 px-3">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-2 py-1 small fw-700">High</span>
+                </div>
+                <div class="text-muted small fw-700 mb-1">STUDY HOURS (WK)</div>
+                <div class="h3 fw-800 mb-2"><span class="counter" data-target="{{ student.study_hours|default:0 }}">0</span>h</div>
+                <div class="progress rounded-pill" style="height: 6px;">
+                    <div class="progress-bar bg-warning" style="width: {{ student.study_hours|default:0|add:50 }}%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card-premium p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="bg-info bg-opacity-10 text-info rounded-3 p-2 px-3">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-2 py-1 small fw-700">-5%</span>
+                </div>
+                <div class="text-muted small fw-700 mb-1">HOMEWORK COMP.</div>
+                <div class="h3 fw-800 mb-2"><span class="counter" data-target="{{ student.homework_completion|default:0 }}">0</span>%</div>
+                <div class="progress rounded-pill" style="height: 6px;">
+                    <div class="progress-bar bg-info" style="width: {{ student.homework_completion|default:0 }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- Performance Overview Chart -->
+        <div class="col-lg-8">
+            <div class="card-premium h-100">
+                <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="fw-800 mb-0">Academic Performance Overview</h5>
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 mt-1">Current Metrics</span>
+                    </div>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div style="height: 350px;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Profile & Professor -->
+        <div class="col-lg-4">
+            <div class="card-premium h-100">
+                <div class="card-header bg-white border-0 py-4 px-4">
+                    <h5 class="fw-800 mb-0">Academic Profile</h5>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="text-center mb-4">
+                        <div class="position-relative d-inline-flex align-items-center justify-content-center">
+                            <svg width="120" height="120" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#F1F5F9" stroke-width="8" />
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="var(--primary)" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="70" stroke-linecap="round" />
+                            </svg>
+                            <div class="position-absolute d-flex flex-column align-items-center justify-content-center" style="width: 100%; height: 100%; top: 0; left: 0;">
+                                <div class="h3 fw-900 mb-0 text-dark">75%</div>
+                                <div class="small fw-700 text-muted" style="font-size: 0.65rem; margin-top: -2px;">COMPLETE</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted fw-600 small">Learning Style</span>
+                            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">{{ student.learning_style|default:"Visual" }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted fw-600 small">Motivation</span>
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">{{ student.motivation|default:"High" }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted fw-600 small">Parental Support</span>
+                            <span class="badge bg-info bg-opacity-10 text-info rounded-pill px-3">{{ student.parental_support|default:"Medium" }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted fw-600 small">Previous Grade</span>
+                            <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3">{{ student.previous_grade|default:"B" }}</span>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 border-light">
+
+                    <div class="p-3 bg-light rounded-4">
+                        <div class="small text-muted fw-700 mb-2">ASSIGNED PROFESSOR</div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-800" style="width: 40px; height: 40px;">
+                                {{ student.professor.user.username|first|upper }}
+                            </div>
+                            <div>
+                                <div class="fw-800 text-dark">{{ student.professor.user.get_full_name|default:student.professor.user.username }}</div>
+                                <div class="smaller text-muted">Academic Supervisor</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Insights Section -->
+    <div class="card-premium p-4 p-lg-5 mb-5 border-0 shadow-lg position-relative overflow-hidden">
+        <div class="position-relative z-index-2">
+            <div class="row align-items-center">
+                <div class="col-lg-1 d-none d-lg-block">
+                    <div class="bg-primary text-white rounded-4 d-flex align-items-center justify-content-center shadow-lg" style="width: 60px; height: 60px;">
+                        <i class="fas fa-brain fa-2x"></i>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <h4 class="fw-800 mb-2">AI Performance Insights</h4>
+                    <p class="text-muted mb-0">Based on our Machine Learning model, here are your personalized recommendations.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <div class="d-inline-flex align-items-center gap-3 bg-light rounded-pill px-4 py-2 border">
+                        <div class="small fw-800 text-muted">Risk Level:</div>
+                        <span class="badge rounded-pill px-3 py-1 fw-800 {% if student.prediction == 'D' %}bg-danger{% elif student.prediction == 'C' %}bg-warning{% else %}bg-success{% endif %}">
+                            {% if student.prediction == 'D' %}High Risk{% elif student.prediction == 'C' %}Moderate Risk{% else %}Minimal Risk{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4 mt-4">
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 border-start border-4 border-primary bg-light h-100">
+                        <h6 class="fw-800 mb-2">Improve Attendance</h6>
+                        <p class="small text-muted mb-0">Students with >90% attendance are 5x more likely to achieve Grade A.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 border-start border-4 border-success bg-light h-100">
+                        <h6 class="fw-800 mb-2">Homework Focus</h6>
+                        <p class="small text-muted mb-0">Complete your pending assignments to increase your success probability by 15%.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 border-start border-4 border-warning bg-light h-100">
+                        <h6 class="fw-800 mb-2">Stay Motivated</h6>
+                        <p class="small text-muted mb-0">Your motivation level is {{ student.motivation|default:"High" }}. Maintain this to ensure consistent progress.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Counter Animation
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200;
+
+    const animateCounters = () => {
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+    }
+
+    // Chart.js Implementation (Bar Chart)
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    const performanceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Midterm Score', 'Attendance', 'Study Hours', 'Homework Comp.'],
+            datasets: [{
+                label: 'Current Metrics',
+                data: [
+                    {{ student.midterm_score|default:0 }}, 
+                    {{ student.attendance_rate|default:0 }}, 
+                    {{ student.study_hours|default:0 }}, 
+                    {{ student.homework_completion|default:0 }}
+                ],
+                backgroundColor: [
+                    '#1D4ED8', // Blue
+                    '#10B981', // Green
+                    '#F59E0B', // Orange
+                    '#0EA5E9'  // Cyan
+                ],
+                borderRadius: 12,
+                barThickness: 50
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0F172A',
+                    titleFont: { family: 'Inter', size: 13 },
+                    bodyFont: { family: 'Inter', size: 12 },
+                    padding: 12,
+                    cornerRadius: 10
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100, // Max for percentage metrics
+                    grid: { color: '#F1F5F9' },
+                    ticks: { font: { family: 'Inter' } }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { family: 'Inter', weight: '600' } }
+                }
+            }
+        }
+    });
+
+    // Trigger on load
+    window.addEventListener('DOMContentLoaded', () => {
+        animateCounters();
+    });
+</script>
+{% endblock %}

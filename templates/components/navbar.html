@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid p-0">
+        <div class="d-flex flex-column">
+            <h4 class="fw-800 mb-0 text-dark">
+                {% block page_title %}{% endblock %}
+            </h4>
+            <div class="small text-muted fw-500">{% block page_subtitle %}{% endblock %}</div>
+        </div>
+        
+        <div class="ms-auto d-flex align-items-center gap-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end d-none d-md-block">
+                    <p class="mb-0 fw-800 small text-dark">{{ user.get_full_name|default:user.username }}</p>
+                    <span class="badge bg-primary bg-opacity-10 text-primary fw-700 px-2 py-1 rounded-pill" style="font-size: 0.65rem; text-transform: uppercase;">
+                        {{ user.role }}
+                    </span>
+                </div>
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-800 shadow-sm" style="width: 44px; height: 44px; border: 3px solid white;">
+                    {{ user.username|first|upper }}
+                </div>
+            </div>
+            <button class="btn btn-light rounded-circle p-2 text-muted" title="Notifications">
+                <i class="far fa-bell"></i>
+            </button>
+        </div>
+    </div>
+</nav>
