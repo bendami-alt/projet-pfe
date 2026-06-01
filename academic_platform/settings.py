@@ -27,7 +27,12 @@ SECRET_KEY = 'django-insecure-2%j^skq)vc)2g_kzvngzj(jvmmcp4mszwq-ex1nrc!1ysbag=w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*'] # Autoriser tous les hôtes pour le déploiement
+
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://projet-pfe-dbot.onrender.com',
+]
 
 
 # Application definition
@@ -84,7 +89,7 @@ DATABASES = {
         'NAME': 'academic_platform_db',
         'USER': 'postgres',
         'PASSWORD': '1234',
-        'HOST': 'edupredict-db',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
