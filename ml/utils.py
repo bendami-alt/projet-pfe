@@ -42,9 +42,20 @@ def predict_student(student):
             encoded_style = 0
 
         # Nouveaux encodages demandés
-        encoded_motivation = le_motivation.transform([student.motivation])[0]
-        encoded_parental = le_parental_support.transform([student.parental_support])[0]
-        encoded_previous_grade = le_note.transform([student.previous_grade])[0]
+        try:
+            encoded_motivation = le_motivation.transform([student.motivation])[0]
+        except:
+            encoded_motivation = 0
+
+        try:
+            encoded_parental = le_parental_support.transform([student.parental_support])[0]
+        except:
+            encoded_parental = 0
+
+        try:
+            encoded_previous_grade = le_note.transform([student.previous_grade])[0]
+        except:
+            encoded_previous_grade = 0
 
         # Construction des données avec l'ordre strict
         data = pd.DataFrame([{
@@ -83,3 +94,4 @@ def predict_student(student):
         print("Erreur prédiction :", e)
         return 'N/A'
         
+    

@@ -22,7 +22,7 @@ class Student(models.Model):
     learning_style = models.CharField(max_length=50, blank=True, default='Visual')
 
     # ML Prediction result
-    prediction = models.CharField(max_length=2, blank=True, default='')
+    prediction = models.CharField(max_length=10, blank=True, default='')
 
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -46,7 +46,7 @@ class Student(models.Model):
         super().save(*args, **kwargs)
 
         # After saving the student, record the prediction history
-        if 'update_fields' not in kwargs and self.prediction and self.prediction != 'N/A':
+        if 'update_fields' not in kwargs and self.prediction:
             PredictionHistory.objects.create(
                 student=self,
                 predicted_grade=self.prediction,
@@ -68,7 +68,7 @@ class Student(models.Model):
 
 class PredictionHistory(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='prediction_history')
-    predicted_grade = models.CharField(max_length=2)
+    predicted_grade = models.CharField(max_length=10)
     midterm_score = models.FloatField()
     attendance_rate = models.FloatField()
     study_hours = models.FloatField()
