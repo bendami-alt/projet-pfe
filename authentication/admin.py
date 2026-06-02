@@ -19,7 +19,8 @@ class ProfessorInline(admin.StackedInline):
 class CustomUserAdmin(UserAdmin):
     list_display = ['username', 'email', 'first_name', 'last_name', 'role', 'is_active']
     list_filter = ['role', 'is_active', 'is_staff']
-    inlines = [StudentInline, ProfessorInline]
+    
+    
     fieldsets = UserAdmin.fieldsets + (
         ('Role', {'fields': ('role',)}),
     )
