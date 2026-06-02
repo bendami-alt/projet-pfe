@@ -74,9 +74,13 @@ def predict_student(student):
 
         # Décodage avec le_target
         final_prediction = le_target.inverse_transform(prediction)[0]
+
+        print("PREDICTION =", final_prediction)
         
         return final_prediction
 
     except Exception as e:
         print("Erreur prédiction :", e)
         return 'N/A'
+        
+        
