@@ -83,4 +83,3 @@ def predict_student(student):
         print("Erreur prédiction :", e)
         return 'N/A'
         
-        
