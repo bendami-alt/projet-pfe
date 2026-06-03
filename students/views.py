@@ -272,9 +272,17 @@ def admin_student_pdf(request, student_id):
     return render_to_pdf('reports/student_report.html', context)
 
 
-@admin_required
-def admin_edit_student(request, student_id):
+@staff_required
+def edit_student(request, student_id):
     student = get_object_or_404(Student, id=student_id)
+    
+    # Sécurité : Si c'est un professeur, il ne peut modifier que ses propres étudiants
+    if request.user.role == 'professor':
+        professor = getattr(request.user, 'professor_profile', None)
+        if student.professor != professor:
+            messages.error(request, "Vous n'êtes pas autorisé à modifier cet étudiant.")
+            return redirect('professor_student_list')
+
     from .forms import StudentEditForm
     
     if request.method == 'POST':
@@ -282,15 +290,20 @@ def admin_edit_student(request, student_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Étudiant modifié avec succès.")
-            return redirect('admin_student_list')
+            if request.user.role == 'admin':
+                return redirect('admin_student_list')
+            return redirect('professor_student_list')
         else:
             messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
     else:
         form = StudentEditForm(instance=student)
+        
+    back_url = 'admin_student_list' if request.user.role == 'admin' else 'professor_student_list'
     
     return render(request, 'students/edit_student.html', {
         'form': form,
-        'student': student
+        'student': student,
+        'back_url': back_url
     })
 
 

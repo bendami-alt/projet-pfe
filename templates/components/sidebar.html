@@ -12,7 +12,7 @@
             <a href="{% url 'admin_dashboard' %}" class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
                 <i class="fas fa-th-large"></i> Dashboard
             </a>
-            <a href="{% url 'admin_student_list' %}" class="{% if request.resolver_match.url_name == 'admin_student_list' or request.resolver_match.url_name == 'add_student' or request.resolver_match.url_name == 'admin_edit_student' %}active{% endif %}">
+            <a href="{% url 'admin_student_list' %}" class="{% if request.resolver_match.url_name == 'admin_student_list' or request.resolver_match.url_name == 'add_student' or request.resolver_match.url_name == 'edit_student' %}active{% endif %}">
                 <i class="fas fa-user-graduate"></i> Students
             </a>
             <a href="{% url 'professor_list' %}" class="{% if request.resolver_match.url_name == 'professor_list' or request.resolver_match.url_name == 'add_professor' or request.resolver_match.url_name == 'edit_professor' or request.resolver_match.url_name == 'professor_detail' %}active{% endif %}">
@@ -23,7 +23,7 @@
             <a href="{% url 'professor_dashboard' %}" class="{% if request.resolver_match.url_name == 'professor_dashboard' %}active{% endif %}">
                 <i class="fas fa-chart-line"></i> Dashboard
             </a>
-            <a href="{% url 'professor_student_list' %}" class="{% if request.resolver_match.url_name == 'professor_student_list' %}active{% endif %}">
+            <a href="{% url 'professor_student_list' %}" class="{% if request.resolver_match.url_name == 'professor_student_list' or request.resolver_match.url_name == 'edit_student' %}active{% endif %}">
                 <i class="fas fa-users"></i> My Students
             </a>
         {% elif user.role == 'student' %}
