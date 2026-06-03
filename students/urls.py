@@ -17,6 +17,8 @@ urlpatterns = [
     path('admin/students/<int:student_id>/pdf/', views.admin_student_pdf, name='admin_student_pdf'),
     path('admin/students/<int:student_id>/edit/', views.admin_edit_student, name='admin_edit_student'),
     path('admin/students/<int:student_id>/delete/', views.admin_delete_student, name='admin_delete_student'),
+    path('admin/students/<int:student_id>/history/', views.admin_student_history, name='admin_student_history'),
+    path('professor/students/<int:student_id>/history/', views.professor_student_history, name='professor_student_history'),
     
     # PDF Exports
     path('export/admin/', views.export_admin_report, name='export_admin_report'),

@@ -78,6 +78,9 @@
                         </td>
                         <td class="text-end pe-4">
                             <div class="d-flex justify-content-end gap-2">
+                                <a href="{% url 'professor_student_history' student.id %}" class="btn btn-light btn-sm rounded-circle p-2" title="Historique des prédictions">
+                                    <i class="fas fa-history text-info"></i>
+                                </a>
                                 <a href="{% url 'admin_student_pdf' student.id %}" class="btn btn-light btn-sm rounded-circle p-2" title="Export PDF">
                                     <i class="fas fa-file-pdf text-danger"></i>
                                 </a>

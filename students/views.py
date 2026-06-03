@@ -333,3 +333,35 @@ def professor_student_list(request):
         'students': students,
         'professor': professor
     })
+
+
+@admin_required
+def admin_student_history(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    history = student.prediction_history.all()
+    context = {
+        'student': student,
+        'history': history,
+        'back_url': 'admin_student_list',
+        'is_admin': True,
+    }
+    return render(request, 'students/student_prediction_history.html', context)
+
+
+@professor_required
+def professor_student_history(request, student_id):
+    professor = getattr(request.user, 'professor_profile', None)
+    if not professor:
+        logout(request)
+        messages.error(request, "No professor profile found.")
+        return redirect('login')
+
+    student = get_object_or_404(Student, id=student_id, professor=professor)
+    history = student.prediction_history.all()
+    context = {
+        'student': student,
+        'history': history,
+        'back_url': 'professor_student_list',
+        'is_admin': False,
+    }
+    return render(request, 'students/student_prediction_history.html', context)
