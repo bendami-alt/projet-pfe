@@ -19,8 +19,15 @@
                 <h2 class="fw-900 mb-1">{{ user.get_full_name|default:user.username }}</h2>
                 <p class="text-muted mb-3">@{{ user.username }}</p>
                 <div class="d-flex justify-content-center gap-2 mb-2">
-                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-700" style="font-size: 0.75rem;">
-                        <i class="fas fa-user-graduate me-1"></i> STUDENT
+                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-700 text-uppercase" style="font-size: 0.75rem;">
+                        {% if user.role == 'student' %}
+                            <i class="fas fa-user-graduate me-1"></i>
+                        {% elif user.role == 'professor' %}
+                            <i class="fas fa-chalkboard-teacher me-1"></i>
+                        {% else %}
+                            <i class="fas fa-user-shield me-1"></i>
+                        {% endif %}
+                        {{ user.get_role_display|default:user.role }}
                     </span>
                 </div>
                 <div class="small text-muted fw-600">
@@ -43,6 +50,7 @@
                             </div>
                         </div>
                     </div>
+                    {% if user.role == 'student' %}
                     <div class="col-md-6">
                         <div class="d-flex align-items-center gap-3 p-3 rounded-4 bg-light h-100">
                             <div class="bg-white rounded-circle p-2 text-success shadow-sm">
@@ -65,9 +73,11 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
 
+            {% if user.role == 'student' %}
             <!-- Prediction History -->
             <div class="card-premium p-5 mb-4 border-0 shadow-sm">
                 <h5 class="fw-800 mb-4 text-center">Historique des Prédictions</h5>
@@ -98,16 +108,9 @@
                     </table>
                 </div>
             </div>
+            {% endif %}
 
-            <!-- Quick Actions -->
-            <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
-                <a href="{% url 'student_dashboard' %}" class="btn btn-hero-main rounded-pill px-4 py-2" style="font-size: 0.9rem;">
-                    <i class="fas fa-chart-line me-2"></i> View My Progress
-                </a>
-                <a href="/students/export/student/" class="btn btn-outline-primary rounded-pill px-4 py-2 fw-800" style="border-width: 2px; font-size: 0.9rem;">
-                    <i class="fas fa-file-download me-2"></i> Download Report
-                </a>
-            </div>
+
         </div>
     </div>
 </div>
