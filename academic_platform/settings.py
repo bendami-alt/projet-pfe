@@ -32,7 +32,12 @@ ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://projet-pfe-dbot.onrender.com',
+    'http://projet-pfe-dbot.onrender.com',
+    'https://www.projet-pfe-dbot.onrender.com',
 ]
+
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 
 
 # Application definition
