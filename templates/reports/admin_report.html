@@ -34,29 +34,24 @@
 <p>Breakdown of AI predictions for all enrolled students:</p>
 <table>
     <tr>
-        <th>Grade</th>
-        <th>Count</th>
-        <th>Percentage</th>
+        <th>Predicted Grade</th>
+        <th>Number of Students</th>
     </tr>
     <tr>
-        <td>Grade A</td>
+        <td><strong>Grade A</strong> (Excellent)</td>
         <td>{{ prediction_dist.A|default:0 }}</td>
-        <td>-</td>
     </tr>
     <tr>
-        <td>Grade B</td>
+        <td><strong>Grade B</strong> (Good)</td>
         <td>{{ prediction_dist.B|default:0 }}</td>
-        <td>-</td>
     </tr>
     <tr>
-        <td>Grade C</td>
+        <td><strong>Grade C</strong> (Average)</td>
         <td>{{ prediction_dist.C|default:0 }}</td>
-        <td>-</td>
     </tr>
     <tr>
-        <td>Grade D</td>
+        <td><strong>Grade D</strong> (At Risk)</td>
         <td>{{ prediction_dist.D|default:0 }}</td>
-        <td>-</td>
     </tr>
 </table>
 
